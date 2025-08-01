@@ -1,0 +1,52 @@
+{
+  "name": "digital_wallet_management_system",
+  "version": "1.0.0",
+  "description": "Design and build a secure, modular, and role-based backend API for a digital wallet system (similar to Bkash or Nagad) using Express.js and Mongoose.",
+  "repository": {
+    "type": "git",
+    "url": "git@github-personal:Sarwarhridoy4/Digital_Wallet_Management_System.git"
+  },
+  "license": "ISC",
+  "author": "Sarwar Hossain",
+  "type": "commonjs",
+  "main": "src/server.ts",
+  "scripts": {
+    "start": "node dist/server.js",
+    "build": "tsc",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@types/cookie-parser": "^1.4.9",
+    "@types/ejs": "^3.1.5",
+    "@types/multer": "^2.0.0",
+    "@types/nodemailer": "^6.4.17",
+    "bcrypt": "^6.0.0",
+    "cloudinary": "^2.7.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "http-status-codes": "^2.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.5",
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.5",
+    "zod": "^4.0.13"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.32.0",
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.1.0",
+    "eslint": "^9.32.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.38.0"
+  }
+}

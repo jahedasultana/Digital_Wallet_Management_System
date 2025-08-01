@@ -1,0 +1,1778 @@
+{
+	"info": {
+		"_postman_id": "da915efe-d589-4d7d-a0e9-cf312fb943f7",
+		"name": "Digital Wallet Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29651957",
+		"_collection_link": "https://nextwebteam.postman.co/workspace/SB-development~2c96d9dd-c8fa-4e27-b08d-a0535c678e94/collection/29651957-da915efe-d589-4d7d-a0e9-cf312fb943f7?action=share&source=collection_link&creator=29651957"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "User Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwiX2lkIjoiNjY5MDJlMDA4ZTVkNjBkMzBjNTg0YjVlIiwiaWF0IjoxNzIzNzQyNzgyLCJleHAiOjE3MjYzMzQ3ODJ9.1WBYCBYgVcDmi0iG4UwUUjr4y-GELyOXdWiH-re3xHXYaWXtDSvrWcGo2-SxNMhV8CD8N9ZgU20h4FV9ASIPxQ",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"caditir829@coursora.com\",\r\n    \"password\": \"StrongP@ssw0rd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwiX2lkIjoiNjY5MDJlMDA4ZTVkNjBkMzBjNTg0YjVlIiwiaWF0IjoxNzIzNzQyNzgyLCJleHAiOjE3MjYzMzQ3ODJ9.1WBYCBYgVcDmi0iG4UwUUjr4y-GELyOXdWiH-re3xHXYaWXtDSvrWcGo2-SxNMhV8CD8N9ZgU20h4FV9ASIPxQ",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/logout",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwiX2lkIjoiNjY5MDJlMDA4ZTVkNjBkMzBjNTg0YjVlIiwiaWF0IjoxNzIzNzQyNzgyLCJleHAiOjE3MjYzMzQ3ODJ9.1WBYCBYgVcDmi0iG4UwUUjr4y-GELyOXdWiH-re3xHXYaWXtDSvrWcGo2-SxNMhV8CD8N9ZgU20h4FV9ASIPxQ",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/refresh-token",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwiX2lkIjoiNjY5MDJlMDA4ZTVkNjBkMzBjNTg0YjVlIiwiaWF0IjoxNzIzNzQyNzgyLCJleHAiOjE3MjYzMzQ3ODJ9.1WBYCBYgVcDmi0iG4UwUUjr4y-GELyOXdWiH-re3xHXYaWXtDSvrWcGo2-SxNMhV8CD8N9ZgU20h4FV9ASIPxQ",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"oldPassword\":\"StrongP@ssw0rd\",\r\n   \"newPassword\":\"StrongP@ssw0rd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/change-password",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set Password(If Account Created Other way)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwiX2lkIjoiNjY5MDJlMDA4ZTVkNjBkMzBjNTg0YjVlIiwiaWF0IjoxNzIzNzQyNzgyLCJleHAiOjE3MjYzMzQ3ODJ9.1WBYCBYgVcDmi0iG4UwUUjr4y-GELyOXdWiH-re3xHXYaWXtDSvrWcGo2-SxNMhV8CD8N9ZgU20h4FV9ASIPxQ",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"password\":\"StrongP@ssw0rd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/set-password",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"set-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwiX2lkIjoiNjY5MDJlMDA4ZTVkNjBkMzBjNTg0YjVlIiwiaWF0IjoxNzIzNzQyNzgyLCJleHAiOjE3MjYzMzQ3ODJ9.1WBYCBYgVcDmi0iG4UwUUjr4y-GELyOXdWiH-re3xHXYaWXtDSvrWcGo2-SxNMhV8CD8N9ZgU20h4FV9ASIPxQ",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"email\":\"yaxelop525@devdigs.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/forgot-password",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwiX2lkIjoiNjY5MDJlMDA4ZTVkNjBkMzBjNTg0YjVlIiwiaWF0IjoxNzIzNzQyNzgyLCJleHAiOjE3MjYzMzQ3ODJ9.1WBYCBYgVcDmi0iG4UwUUjr4y-GELyOXdWiH-re3xHXYaWXtDSvrWcGo2-SxNMhV8CD8N9ZgU20h4FV9ASIPxQ",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"newPassword\":\"StrongP@ssw0rd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/auth/reset-password",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"auth",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "GET USER WALLET INFO",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg5YmFlNDFkNmIwNjY0MjMyYzAxNGYiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUzODc3MjgxLCJleHAiOjE3NTM5NjM2ODF9.eaw7hNX9GdzZGh4EgGB1HMtHc5-AmpG5TTDuaZwLzXM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/wallet",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"wallet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register New User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicm9sZSI6ImFkbWluIiwiX2lkIjoiNjY5MDJlMDA4ZTVkNjBkMzBjNTg0YjVlIiwiaWF0IjoxNzIzNzQyNzgyLCJleHAiOjE3MjYzMzQ3ODJ9.1WBYCBYgVcDmi0iG4UwUUjr4y-GELyOXdWiH-re3xHXYaWXtDSvrWcGo2-SxNMhV8CD8N9ZgU20h4FV9ASIPxQ",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Alice3",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "caditir829@coursora3.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "01700000004",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "StrongP@ssw0rd",
+									"type": "text"
+								},
+								{
+									"key": "identifier",
+									"value": "NID",
+									"type": "text"
+								},
+								{
+									"key": "profile_picture",
+									"type": "file",
+									"src": "/C:/Users/Sarwar_Hossain/Pictures/Screenshots/{D7117D78-8E12-4658-9175-BE5E6E5F6F5A}.png"
+								},
+								{
+									"key": "identifier_image",
+									"type": "file",
+									"src": "/C:/Users/Sarwar_Hossain/Pictures/Screenshots/{FEEFF8CC-1035-453B-B918-F21842C8135D}.png"
+								},
+								{
+									"key": "role",
+									"value": "USER",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET MY Wallet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response contains required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.all.keys('statusCode', 'success', 'message', 'data');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the structure of the user object within the data field\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.data).to.be.an('object').that.has.property('user').that.is.an('object');\r",
+									"    \r",
+									"    const user = responseData.data.user;\r",
+									"    \r",
+									"    pm.expect(user).to.have.all.keys('_id', 'name', 'email', 'phone', 'profile_picture', 'role', 'status', 'verified', 'identifier', 'identifier_image', 'createdAt', 'updatedAt', '__v');\r",
+									"    \r",
+									"    pm.expect(user.email).to.be.a('string').that.matches(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email format is invalid\");\r",
+									"    pm.expect(user.phone).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.name).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.role).to.be.a('string').that.is.not.empty;\r",
+									"    \r",
+									"    pm.expect(user.verified).to.be.a('boolean');\r",
+									"    pm.expect(user.status).to.be.a('string');\r",
+									"    pm.expect(user.createdAt).to.be.a('string');\r",
+									"    pm.expect(user.updatedAt).to.be.a('string');\r",
+									"    pm.expect(user.__v).to.be.a('number');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Access token and refresh token must be non-empty strings\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.data.accessToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Access token should not be empty\");\r",
+									"    pm.expect(responseData.data.refreshToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Refresh token should not be empty\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhhMTFiNmQ3ZTJkMTMxMGFkMjY4OGQiLCJlbWFpbCI6ImFsaW1wYXNzQGdtYWlsLmNvbSIsInJvbGUiOiJBR0VOVCIsImlhdCI6MTc1Mzg4MTA3NSwiZXhwIjoxNzUzOTY3NDc1fQ.TXLiIKBm-rs68zXsjYyie5xjDAxuSa_de-4mv3vxdDo",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/wallet/me",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"wallet",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET AGENT/USER TRANSACTION",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhhMTFiNmQ3ZTJkMTMxMGFkMjY4OGQiLCJlbWFpbCI6ImFsaW1wYXNzQGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzUzODg3ODU2LCJleHAiOjE3NTM5NzQyNTZ9.LLXUERtC4GnYn9BMtg3nLplbBFdcXV7GCm-Jt6xczNQ",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/transaction/me",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"transaction",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Mony",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response contains required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.all.keys('statusCode', 'success', 'message', 'data');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the structure of the user object within the data field\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.data).to.be.an('object').that.has.property('user').that.is.an('object');\r",
+									"    \r",
+									"    const user = responseData.data.user;\r",
+									"    \r",
+									"    pm.expect(user).to.have.all.keys('_id', 'name', 'email', 'phone', 'profile_picture', 'role', 'status', 'verified', 'identifier', 'identifier_image', 'createdAt', 'updatedAt', '__v');\r",
+									"    \r",
+									"    pm.expect(user.email).to.be.a('string').that.matches(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email format is invalid\");\r",
+									"    pm.expect(user.phone).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.name).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.role).to.be.a('string').that.is.not.empty;\r",
+									"    \r",
+									"    pm.expect(user.verified).to.be.a('boolean');\r",
+									"    pm.expect(user.status).to.be.a('string');\r",
+									"    pm.expect(user.createdAt).to.be.a('string');\r",
+									"    pm.expect(user.updatedAt).to.be.a('string');\r",
+									"    pm.expect(user.__v).to.be.a('number');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Access token and refresh token must be non-empty strings\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.data.accessToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Access token should not be empty\");\r",
+									"    pm.expect(responseData.data.refreshToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Refresh token should not be empty\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhhMTFiNmQ3ZTJkMTMxMGFkMjY4OGQiLCJlbWFpbCI6ImFsaW1wYXNzQGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzUzODgyMzgwLCJleHAiOjE3NTM5Njg3ODB9.FRjVeb0lFo0oXrB3e37dMEjwp2F8BhjnJiS0rRFRBGo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": 100,\r\n  \"receiverPhone\":\"01700000002\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/wallet/send",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"wallet",
+								"send"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add MONEY FROM BANK",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response contains required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.all.keys('statusCode', 'success', 'message', 'data');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the structure of the user object within the data field\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.data).to.be.an('object').that.has.property('user').that.is.an('object');\r",
+									"    \r",
+									"    const user = responseData.data.user;\r",
+									"    \r",
+									"    pm.expect(user).to.have.all.keys('_id', 'name', 'email', 'phone', 'profile_picture', 'role', 'status', 'verified', 'identifier', 'identifier_image', 'createdAt', 'updatedAt', '__v');\r",
+									"    \r",
+									"    pm.expect(user.email).to.be.a('string').that.matches(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email format is invalid\");\r",
+									"    pm.expect(user.phone).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.name).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.role).to.be.a('string').that.is.not.empty;\r",
+									"    \r",
+									"    pm.expect(user.verified).to.be.a('boolean');\r",
+									"    pm.expect(user.status).to.be.a('string');\r",
+									"    pm.expect(user.createdAt).to.be.a('string');\r",
+									"    pm.expect(user.updatedAt).to.be.a('string');\r",
+									"    pm.expect(user.__v).to.be.a('number');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Access token and refresh token must be non-empty strings\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.data.accessToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Access token should not be empty\");\r",
+									"    pm.expect(responseData.data.refreshToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Refresh token should not be empty\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhhMTFiNmQ3ZTJkMTMxMGFkMjY4OGQiLCJlbWFpbCI6ImFsaW1wYXNzQGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzUzODgyMzgwLCJleHAiOjE3NTM5Njg3ODB9.FRjVeb0lFo0oXrB3e37dMEjwp2F8BhjnJiS0rRFRBGo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"amount\": 200 }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/wallet/top-up",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"wallet",
+								"top-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TRANSFER MONY",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response contains required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.all.keys('statusCode', 'success', 'message', 'data');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the structure of the user object within the data field\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.data).to.be.an('object').that.has.property('user').that.is.an('object');\r",
+									"    \r",
+									"    const user = responseData.data.user;\r",
+									"    \r",
+									"    pm.expect(user).to.have.all.keys('_id', 'name', 'email', 'phone', 'profile_picture', 'role', 'status', 'verified', 'identifier', 'identifier_image', 'createdAt', 'updatedAt', '__v');\r",
+									"    \r",
+									"    pm.expect(user.email).to.be.a('string').that.matches(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email format is invalid\");\r",
+									"    pm.expect(user.phone).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.name).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.role).to.be.a('string').that.is.not.empty;\r",
+									"    \r",
+									"    pm.expect(user.verified).to.be.a('boolean');\r",
+									"    pm.expect(user.status).to.be.a('string');\r",
+									"    pm.expect(user.createdAt).to.be.a('string');\r",
+									"    pm.expect(user.updatedAt).to.be.a('string');\r",
+									"    pm.expect(user.__v).to.be.a('number');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Access token and refresh token must be non-empty strings\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.data.accessToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Access token should not be empty\");\r",
+									"    pm.expect(responseData.data.refreshToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Refresh token should not be empty\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhhMTFiNmQ3ZTJkMTMxMGFkMjY4OGQiLCJlbWFpbCI6ImFsaW1wYXNzQGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzUzODgyMzgwLCJleHAiOjE3NTM5Njg3ODB9.FRjVeb0lFo0oXrB3e37dMEjwp2F8BhjnJiS0rRFRBGo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"amount\": 200 }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/wallet/withdraw",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"wallet",
+								"withdraw"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "WITHDRAW BALANCE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response contains required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.all.keys('statusCode', 'success', 'message', 'data');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the structure of the user object within the data field\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.data).to.be.an('object').that.has.property('user').that.is.an('object');\r",
+									"    \r",
+									"    const user = responseData.data.user;\r",
+									"    \r",
+									"    pm.expect(user).to.have.all.keys('_id', 'name', 'email', 'phone', 'profile_picture', 'role', 'status', 'verified', 'identifier', 'identifier_image', 'createdAt', 'updatedAt', '__v');\r",
+									"    \r",
+									"    pm.expect(user.email).to.be.a('string').that.matches(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email format is invalid\");\r",
+									"    pm.expect(user.phone).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.name).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.role).to.be.a('string').that.is.not.empty;\r",
+									"    \r",
+									"    pm.expect(user.verified).to.be.a('boolean');\r",
+									"    pm.expect(user.status).to.be.a('string');\r",
+									"    pm.expect(user.createdAt).to.be.a('string');\r",
+									"    pm.expect(user.updatedAt).to.be.a('string');\r",
+									"    pm.expect(user.__v).to.be.a('number');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Access token and refresh token must be non-empty strings\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.data.accessToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Access token should not be empty\");\r",
+									"    pm.expect(responseData.data.refreshToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Refresh token should not be empty\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhhMTFiNmQ3ZTJkMTMxMGFkMjY4OGQiLCJlbWFpbCI6ImFsaW1wYXNzQGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzUzODgyMzgwLCJleHAiOjE3NTM5Njg3ODB9.FRjVeb0lFo0oXrB3e37dMEjwp2F8BhjnJiS0rRFRBGo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": 20\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/wallet/withdraw",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"wallet",
+								"withdraw"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADD BALANCE",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response contains required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.all.keys('statusCode', 'success', 'message', 'data');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the structure of the user object within the data field\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.data).to.be.an('object').that.has.property('user').that.is.an('object');\r",
+									"    \r",
+									"    const user = responseData.data.user;\r",
+									"    \r",
+									"    pm.expect(user).to.have.all.keys('_id', 'name', 'email', 'phone', 'profile_picture', 'role', 'status', 'verified', 'identifier', 'identifier_image', 'createdAt', 'updatedAt', '__v');\r",
+									"    \r",
+									"    pm.expect(user.email).to.be.a('string').that.matches(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email format is invalid\");\r",
+									"    pm.expect(user.phone).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.name).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.role).to.be.a('string').that.is.not.empty;\r",
+									"    \r",
+									"    pm.expect(user.verified).to.be.a('boolean');\r",
+									"    pm.expect(user.status).to.be.a('string');\r",
+									"    pm.expect(user.createdAt).to.be.a('string');\r",
+									"    pm.expect(user.updatedAt).to.be.a('string');\r",
+									"    pm.expect(user.__v).to.be.a('number');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Access token and refresh token must be non-empty strings\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.data.accessToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Access token should not be empty\");\r",
+									"    pm.expect(responseData.data.refreshToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Refresh token should not be empty\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhhMTFiNmQ3ZTJkMTMxMGFkMjY4OGQiLCJlbWFpbCI6ImFsaW1wYXNzQGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzUzODgyMzgwLCJleHAiOjE3NTM5Njg3ODB9.FRjVeb0lFo0oXrB3e37dMEjwp2F8BhjnJiS0rRFRBGo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": 100\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/wallet/top-up",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"wallet",
+								"top-up"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "GET ALL USER ADMIN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response contains required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.all.keys('statusCode', 'success', 'message', 'data');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the structure of the user object within the data field\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.data).to.be.an('object').that.has.property('user').that.is.an('object');\r",
+									"    \r",
+									"    const user = responseData.data.user;\r",
+									"    \r",
+									"    pm.expect(user).to.have.all.keys('_id', 'name', 'email', 'phone', 'profile_picture', 'role', 'status', 'verified', 'identifier', 'identifier_image', 'createdAt', 'updatedAt', '__v');\r",
+									"    \r",
+									"    pm.expect(user.email).to.be.a('string').that.matches(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email format is invalid\");\r",
+									"    pm.expect(user.phone).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.name).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.role).to.be.a('string').that.is.not.empty;\r",
+									"    \r",
+									"    pm.expect(user.verified).to.be.a('boolean');\r",
+									"    pm.expect(user.status).to.be.a('string');\r",
+									"    pm.expect(user.createdAt).to.be.a('string');\r",
+									"    pm.expect(user.updatedAt).to.be.a('string');\r",
+									"    pm.expect(user.__v).to.be.a('number');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Access token and refresh token must be non-empty strings\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.data.accessToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Access token should not be empty\");\r",
+									"    pm.expect(responseData.data.refreshToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Refresh token should not be empty\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg5YmFlNDFkNmIwNjY0MjMyYzAxNGYiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUzODc3MjgxLCJleHAiOjE3NTM5NjM2ODF9.eaw7hNX9GdzZGh4EgGB1HMtHc5-AmpG5TTDuaZwLzXM",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Wallet by Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response contains required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.all.keys('statusCode', 'success', 'message', 'data');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the structure of the user object within the data field\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.data).to.be.an('object').that.has.property('user').that.is.an('object');\r",
+									"    \r",
+									"    const user = responseData.data.user;\r",
+									"    \r",
+									"    pm.expect(user).to.have.all.keys('_id', 'name', 'email', 'phone', 'profile_picture', 'role', 'status', 'verified', 'identifier', 'identifier_image', 'createdAt', 'updatedAt', '__v');\r",
+									"    \r",
+									"    pm.expect(user.email).to.be.a('string').that.matches(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email format is invalid\");\r",
+									"    pm.expect(user.phone).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.name).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.role).to.be.a('string').that.is.not.empty;\r",
+									"    \r",
+									"    pm.expect(user.verified).to.be.a('boolean');\r",
+									"    pm.expect(user.status).to.be.a('string');\r",
+									"    pm.expect(user.createdAt).to.be.a('string');\r",
+									"    pm.expect(user.updatedAt).to.be.a('string');\r",
+									"    pm.expect(user.__v).to.be.a('number');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Access token and refresh token must be non-empty strings\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.data.accessToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Access token should not be empty\");\r",
+									"    pm.expect(responseData.data.refreshToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Refresh token should not be empty\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg5YmFlNDFkNmIwNjY0MjMyYzAxNGYiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUzODg2Njk0LCJleHAiOjE3NTM5NzMwOTR9.o2S4geopHhSHSVZZyWKB6aMvpbJnc_KcAnao3dd7USs",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/wallet",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"wallet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Transactions by Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg5YmFlNDFkNmIwNjY0MjMyYzAxNGYiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUzODg2Njk0LCJleHAiOjE3NTM5NzMwOTR9.o2S4geopHhSHSVZZyWKB6aMvpbJnc_KcAnao3dd7USs",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/transaction",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"transaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SUSPEND AGENT BY ADMIN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response contains required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.all.keys('statusCode', 'success', 'message', 'data');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the structure of the user object within the data field\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.data).to.be.an('object').that.has.property('user').that.is.an('object');\r",
+									"    \r",
+									"    const user = responseData.data.user;\r",
+									"    \r",
+									"    pm.expect(user).to.have.all.keys('_id', 'name', 'email', 'phone', 'profile_picture', 'role', 'status', 'verified', 'identifier', 'identifier_image', 'createdAt', 'updatedAt', '__v');\r",
+									"    \r",
+									"    pm.expect(user.email).to.be.a('string').that.matches(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email format is invalid\");\r",
+									"    pm.expect(user.phone).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.name).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.role).to.be.a('string').that.is.not.empty;\r",
+									"    \r",
+									"    pm.expect(user.verified).to.be.a('boolean');\r",
+									"    pm.expect(user.status).to.be.a('string');\r",
+									"    pm.expect(user.createdAt).to.be.a('string');\r",
+									"    pm.expect(user.updatedAt).to.be.a('string');\r",
+									"    pm.expect(user.__v).to.be.a('number');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Access token and refresh token must be non-empty strings\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.data.accessToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Access token should not be empty\");\r",
+									"    pm.expect(responseData.data.refreshToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Refresh token should not be empty\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg5YmFlNDFkNmIwNjY0MjMyYzAxNGYiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUzODc3MjgxLCJleHAiOjE3NTM5NjM2ODF9.eaw7hNX9GdzZGh4EgGB1HMtHc5-AmpG5TTDuaZwLzXM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/688c4af5285c409ad45c0a70/suspend",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"688c4af5285c409ad45c0a70",
+								"suspend"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "VERIFY AGENT /USER BY ADMIN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg5YmFlNDFkNmIwNjY0MjMyYzAxNGYiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUzODc3MjgxLCJleHAiOjE3NTM5NjM2ODF9.eaw7hNX9GdzZGh4EgGB1HMtHc5-AmpG5TTDuaZwLzXM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/688c4af5285c409ad45c0a70/approve",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"688c4af5285c409ad45c0a70",
+								"approve"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BLOCK USER BY ADMIN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response contains required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.all.keys('statusCode', 'success', 'message', 'data');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the structure of the user object within the data field\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.data).to.be.an('object').that.has.property('user').that.is.an('object');\r",
+									"    \r",
+									"    const user = responseData.data.user;\r",
+									"    \r",
+									"    pm.expect(user).to.have.all.keys('_id', 'name', 'email', 'phone', 'profile_picture', 'role', 'status', 'verified', 'identifier', 'identifier_image', 'createdAt', 'updatedAt', '__v');\r",
+									"    \r",
+									"    pm.expect(user.email).to.be.a('string').that.matches(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email format is invalid\");\r",
+									"    pm.expect(user.phone).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.name).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.role).to.be.a('string').that.is.not.empty;\r",
+									"    \r",
+									"    pm.expect(user.verified).to.be.a('boolean');\r",
+									"    pm.expect(user.status).to.be.a('string');\r",
+									"    pm.expect(user.createdAt).to.be.a('string');\r",
+									"    pm.expect(user.updatedAt).to.be.a('string');\r",
+									"    pm.expect(user.__v).to.be.a('number');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Access token and refresh token must be non-empty strings\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.data.accessToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Access token should not be empty\");\r",
+									"    pm.expect(responseData.data.refreshToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Refresh token should not be empty\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg5YmFlNDFkNmIwNjY0MjMyYzAxNGYiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUzODc3MjgxLCJleHAiOjE3NTM5NjM2ODF9.eaw7hNX9GdzZGh4EgGB1HMtHc5-AmpG5TTDuaZwLzXM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/688c4af5285c409ad45c0a70/block",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"688c4af5285c409ad45c0a70",
+								"block"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UNBLOCK USER BY ADMIN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODg5YmFlNDFkNmIwNjY0MjMyYzAxNGYiLCJlbWFpbCI6ImFkbWluQGV4YW1wbGUuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzUzODc3MjgxLCJleHAiOjE3NTM5NjM2ODF9.eaw7hNX9GdzZGh4EgGB1HMtHc5-AmpG5TTDuaZwLzXM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/user/688c4af5285c409ad45c0a70/unblock",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"user",
+								"688c4af5285c409ad45c0a70",
+								"unblock"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Agent",
+			"item": [
+				{
+					"name": "AGENT CASH OUT",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response contains required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.all.keys('statusCode', 'success', 'message', 'data');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Validate the structure of the user object within the data field\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.data).to.be.an('object').that.has.property('user').that.is.an('object');\r",
+									"    \r",
+									"    const user = responseData.data.user;\r",
+									"    \r",
+									"    pm.expect(user).to.have.all.keys('_id', 'name', 'email', 'phone', 'profile_picture', 'role', 'status', 'verified', 'identifier', 'identifier_image', 'createdAt', 'updatedAt', '__v');\r",
+									"    \r",
+									"    pm.expect(user.email).to.be.a('string').that.matches(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email format is invalid\");\r",
+									"    pm.expect(user.phone).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.name).to.be.a('string').that.is.not.empty;\r",
+									"    pm.expect(user.role).to.be.a('string').that.is.not.empty;\r",
+									"    \r",
+									"    pm.expect(user.verified).to.be.a('boolean');\r",
+									"    pm.expect(user.status).to.be.a('string');\r",
+									"    pm.expect(user.createdAt).to.be.a('string');\r",
+									"    pm.expect(user.updatedAt).to.be.a('string');\r",
+									"    pm.expect(user.__v).to.be.a('number');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Access token and refresh token must be non-empty strings\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.data.accessToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Access token should not be empty\");\r",
+									"    pm.expect(responseData.data.refreshToken).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Refresh token should not be empty\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhhMTFiNmQ3ZTJkMTMxMGFkMjY4OGQiLCJlbWFpbCI6ImFsaW1wYXNzQGdtYWlsLmNvbSIsInJvbGUiOiJBR0VOVCIsImlhdCI6MTc1Mzg4ODk1NCwiZXhwIjoxNzUzOTc1MzU0fQ.-lUDAnsn28VNHEZRTZz7yNgdLjhJK7itzv5rMNK6IYU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userPhone\": \"01700000001\",\r\n  \"amount\": 20\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/transaction/cash-out",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"transaction",
+								"cash-out"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AGENT CASH IN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODhhMTFiNmQ3ZTJkMTMxMGFkMjY4OGQiLCJlbWFpbCI6ImFsaW1wYXNzQGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzUzODg3ODU2LCJleHAiOjE3NTM5NzQyNTZ9.LLXUERtC4GnYn9BMtg3nLplbBFdcXV7GCm-Jt6xczNQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userPhone\": \"01700000001\",\r\n  \"amount\": 1000\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/transaction/cash-in",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"transaction",
+								"cash-in"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "https://digital-wallet-management-system-kappa.vercel.app/api/v1",
+			"type": "default"
+		}
+	]
+}
