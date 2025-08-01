@@ -49,10 +49,10 @@ _Request Body (form data):_
   "email": "jahida@example.com",
   "phone": "01712345678",
   "password": "secret123",
-  "identifier": "NID", // NID or BIRTH_CERTIFICATE
-  "identifier_image": "", // Image less than 2 MB for KYC (Required)
-  "profile_picture": "", // Image less than 2 MB(Optional)
-  "role": "USER" // or "AGENT" (agent accounts start as "pending")
+  "identifier": "NID", 
+  "identifier_image": "", 
+  "profile_picture": "", 
+  "role": "USER" 
 }
 ```
 
