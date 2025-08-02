@@ -13,12 +13,7 @@ cloudinary.config({
   api_secret: envConfig.CLOUDINARY_API_SECRET,
 });
 
-/**
- * Uploads a buffer to Cloudinary in a specified folder.
- * @param buffer - File buffer
- * @param fileName - Original file name
- * @param folder - Folder name (e.g., "profile-pictures" | "kyc")
- */
+
 export const uploadBufferToCloudinary = async (
   buffer: Buffer,
   fileName: string,
@@ -28,7 +23,7 @@ export const uploadBufferToCloudinary = async (
     const sanitizedName = fileName
       .toLowerCase()
       .replace(/\s+/g, "-")
-      .replace(/\.[^/.]+$/, "") // remove extension
+      .replace(/\.[^/.]+$/, "") 
       // eslint-disable-next-line no-useless-escape
       .replace(/[^a-z0-9\-]/g, "");
 
@@ -63,11 +58,7 @@ export const uploadBufferToCloudinary = async (
   }
 };
 
-/**
- * Deletes a Cloudinary image by its full URL.
- * Extracts the `public_id` from URL.
- * @param url - Full Cloudinary image URL
- */
+
 export const deleteImageFromCloudinary = async (url: string) => {
   try {
     // Matches folder and public_id (e.g., profile-pictures/abc-123)
