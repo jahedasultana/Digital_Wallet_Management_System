@@ -48,7 +48,7 @@ export const seedAdmin = async () => {
     // ✅ Create Wallet for Admin
     await Wallet.create({
       user: superAdmin._id,
-      balance: 50, 
+      balance: 50, // or set a custom admin starting balance
       status: "ACTIVE",
     });
 

@@ -1,3 +1,5 @@
+// src/app.ts
+// All imports
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import envConfig from "./app/config/env";
@@ -6,6 +8,7 @@ import httpStatus from "http-status-codes";
 import notFound from "./app/middlewares/notFound";
 import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 import { router } from "./app/routes";
+import { setupSwagger } from "./swagger"; // ✅ add this
 
 const app: Application = express();
 
@@ -21,8 +24,11 @@ app.use(
   })
 );
 
-
+// Entry point for routes
 app.use("/api/v1", router);
+
+// Swagger Docs ✅
+setupSwagger(app);
 
 // Application Entry Point
 app.get("/", (_req: Request, res: Response) => {
@@ -36,8 +42,9 @@ app.get("/", (_req: Request, res: Response) => {
   });
 });
 
-
+// Global Error Handler
 app.use(globalErrorHandler);
+// Not Found Handler
 app.use(notFound);
 
 export default app;

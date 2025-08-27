@@ -13,7 +13,7 @@ const walletSchema = new Schema<IWallet>(
     balance: {
       type: Number,
       required: true,
-      default: 50, 
+      default: 50, // default balance on user registration
     },
     status: {
       type: String,
@@ -22,7 +22,7 @@ const walletSchema = new Schema<IWallet>(
     },
   },
   {
-    timestamps: true, 
+    timestamps: true, // adds createdAt and updatedAt
   }
 );
 

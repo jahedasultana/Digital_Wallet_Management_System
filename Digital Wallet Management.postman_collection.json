@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "e3217404-95b3-437f-9a60-1e9893b350dc",
+		"_postman_id": "da915efe-d589-4d7d-a0e9-cf312fb943f7",
 		"name": "Digital Wallet Management",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "46079750",
-		"_collection_link": "https://sathi-2133789.postman.co/workspace/a71af916-a30f-4b85-83eb-0dff5f9a4937/collection/46079750-e3217404-95b3-437f-9a60-1e9893b350dc?action=share&source=collection_link&creator=46079750"
+		"_exporter_id": "29651957",
+		"_collection_link": "https://nextwebteam.postman.co/workspace/SB-development~2c96d9dd-c8fa-4e27-b08d-a0535c678e94/collection/29651957-da915efe-d589-4d7d-a0e9-cf312fb943f7?action=share&source=collection_link&creator=29651957"
 	},
 	"item": [
 		{
@@ -46,7 +46,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"sathi829@coursora3.com\",\r\n    \"password\": \"StrongP@ssw0rd\"\r\n}",
+							"raw": "{\r\n    \"email\": \"caditir829@coursora.com\",\r\n    \"password\": \"StrongP@ssw0rd\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -418,12 +418,12 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "sathi",
+									"value": "Alice3",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "sathi829@coursora3.com",
+									"value": "caditir829@coursora3.com",
 									"type": "text"
 								},
 								{
@@ -449,7 +449,7 @@
 								{
 									"key": "identifier_image",
 									"type": "file",
-									"src": "/C:/Users/user/Downloads/icons8-mongoose-logo-48.png"
+									"src": "/C:/Users/Sarwar_Hossain/Pictures/Screenshots/{FEEFF8CC-1035-453B-B918-F21842C8135D}.png"
 								},
 								{
 									"key": "role",
@@ -1768,32 +1768,10 @@
 			]
 		}
 	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		}
-	],
 	"variable": [
 		{
 			"key": "baseURL",
-			"value": "https://digital-wallet-management-system-delta.vercel.app/",
+			"value": "https://digital-wallet-management-system-kappa.vercel.app/api/v1",
 			"type": "default"
 		}
 	]

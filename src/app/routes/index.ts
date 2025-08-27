@@ -26,6 +26,5 @@ const moduleRoutes = [
 ];
 
 moduleRoutes.forEach((route) => {
-  console.log(route);
   router.use(route.path, route.route);
 });

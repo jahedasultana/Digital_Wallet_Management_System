@@ -2,7 +2,7 @@ import { Role, UserStatus, IdentifierType, verifyStatus } from "../../types";
 
 export interface Identifier {
   type: IdentifierType;
-  value: string; 
+  value: string; // URL of the uploaded KYC document image
 }
 
 export interface IUser {
@@ -13,16 +13,16 @@ export interface IUser {
   email: string;
   phone: string;
   password: string;
-  profile_picture?: string | null; 
+  profile_picture?: string | null; // optional or null if not uploaded yet
 
   // Role & Status
   role: Role;
   status: UserStatus;
-  verified?: verifyStatus; 
+  verified?: verifyStatus; // optional, defaults to PENDING
 
   // Identifier for KYC verification (non-nullable)
   identifier: string;
-  identifier_image?: string; 
+  identifier_image?: string; // URL of the uploaded identifier image
 
   // Timestamps auto-managed by Mongoose
   createdAt?: Date;

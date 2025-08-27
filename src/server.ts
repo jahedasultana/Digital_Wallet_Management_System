@@ -5,13 +5,13 @@ import envConfig from "./app/config/env";
 import app from "./app";
 import { seedAdmin } from "./app/utils/seedAdmin";
 
+
 let server: Server;
 
 const startServer = async () => {
   try {
     await mongoose.connect(envConfig.DB_URL);
     console.log("🟢 Connected to MongoDB");
-
     server = app.listen(envConfig.PORT, () => {
       console.log(`🚀 Server listening on http://localhost:${envConfig.PORT}`);
     });

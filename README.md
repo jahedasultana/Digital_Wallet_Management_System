@@ -1,6 +1,8 @@
 # Digital Wallet Management System API Documentation
 
-**Base URL:** `https://digital-wallet-management-system-delta.vercel.app/api/v1`
+**Base URL:** `https://digital-wallet-management-system-kappa.vercel.app/api/v1`
+
+**Swager(local):** `http://localhost:5000/api-docs/`
 
 A secure, role-based digital wallet API built with **Express.js (TypeScript)** and **MongoDB (Mongoose)**. The system supports three roles: **Users**, **Agents**, and **Admins**. Users can manage their wallets (top-up, send, withdraw), agents can perform cash-in/out transactions (with commission), and admins have full control over users, agents, wallets, and transaction records. The API enables features like user registration/login, wallet management, transaction history, agent verification, and account blocking. All endpoints enforce authentication (JWT) and role-based authorization.
 
@@ -45,14 +47,14 @@ _Request Body (form data):_
 
 ```json
 {
-  "name": "Jaheda Sultana",
-  "email": "jahida@example.com",
-  "phone": "01712345678",
-  "password": "secret123",
-  "identifier": "NID", 
-  "identifier_image": "", 
-  "profile_picture": "", 
-  "role": "USER" 
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "phone": "017XXXXXXXX", // or +880xxxxxxxxxx(unique)
+  "password": "strongPassword",
+  "identifier": "NID", // NID or BIRTH_CERTIFICATE
+  "identifier_image": "", // Image less than 2 MB for KYC (Required)
+  "profile_picture": "", // Image less than 2 MB(Optional)
+  "role": "USER" // or "AGENT" (agent accounts start as "pending")
 }
 ```
 
