@@ -1,5 +1,3 @@
-// src/app.ts
-// All imports
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import envConfig from "./app/config/env";
@@ -23,7 +21,6 @@ app.use(
   })
 );
 
-// Entry point for routes
 
 app.use("/api/v1", router);
 
@@ -38,9 +35,9 @@ app.get("/", (_req: Request, res: Response) => {
     },
   });
 });
-// Global Error Handler
+
+
 app.use(globalErrorHandler);
-// Not Found Handler
 app.use(notFound);
 
 export default app;
