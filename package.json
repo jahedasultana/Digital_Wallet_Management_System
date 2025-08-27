@@ -16,7 +16,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "vercel-build": "tsc"
   },
   "dependencies": {
     "@types/cookie-parser": "^1.4.9",
