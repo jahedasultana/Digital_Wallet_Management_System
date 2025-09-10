@@ -12,6 +12,13 @@ import { setupSwagger } from "./swagger"; // ✅ add this
 
 const app: Application = express();
 
+const allowedOrigins = [
+  envConfig.FRONTEND_URL,
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "https://digital-wallet-management-client.vercel.app"
+];
+
 // Middlewares
 app.use(cookieParser());
 app.use(express.json());
@@ -19,8 +26,17 @@ app.set("trust proxy", 1);
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: envConfig.FRONTEND_URL,
-    credentials: true,
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // allow cookies
   })
 );
 

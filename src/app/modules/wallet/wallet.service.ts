@@ -204,10 +204,50 @@ const getAllWallets = async () => {
   return Wallet.find({});
 };
 
+const getWalletStatistics = async () => {
+  const totalWallets = await Wallet.countDocuments();
+  const totalBalanceAgg = await Wallet.aggregate([
+    { $group: { _id: null, totalBalance: { $sum: "$balance" } } },
+  ]);
+  const totalBalance = totalBalanceAgg[0]?.totalBalance || 0;
+
+  const activeWallets = await Wallet.countDocuments({
+    status: WalletStatus.ACTIVE,
+  });
+  const blockedWallets = await Wallet.countDocuments({
+    status: WalletStatus.BLOCKED,
+  });
+
+  return {
+    totalWallets,
+    totalBalance,
+    activeWallets,
+    blockedWallets,
+  };
+};
+
+const updateWalletStatus = async (walletId: string, status: WalletStatus) => {
+  if (!Object.values(WalletStatus).includes(status)) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid wallet status");
+  }
+
+  const wallet = await Wallet.findById(walletId);
+  if (!wallet) {
+    throw new AppError(httpStatus.NOT_FOUND, "Wallet not found");
+  }
+
+  wallet.status = status;
+  await wallet.save();
+
+  return wallet;
+};
+
 export const WalletService = {
   getWalletByUserId,
   topUp,
   withdraw,
   sendMoney,
   getAllWallets,
+  getWalletStatistics,
+  updateWalletStatus,
 };

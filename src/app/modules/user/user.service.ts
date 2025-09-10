@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IUser } from "./user.interface";
+import { IUser, UpdateProfilePayload } from "./user.interface";
 import { User } from "./user.model";
 import { Wallet } from "../wallet/wallet.model";
 import { Transaction } from "../transaction/transaction.model";
@@ -33,14 +33,14 @@ const createUser = async (
   if (!payload.email || !payload.phone) {
     throw new AppError(httpStatus.BAD_REQUEST, "Email and Phone are required");
   }
+
   const session = await mongoose.startSession();
+  session.startTransaction();
 
   try {
-    session.startTransaction();
-
     const { email, phone, password, name, role, identifier } = payload;
 
-    // Check user exists
+    // Check if user already exists
     const existingUser = await User.findOne({ $or: [{ email }, { phone }] });
     if (existingUser) {
       throw new AppError(httpStatus.BAD_REQUEST, "User already exists");
@@ -50,13 +50,11 @@ const createUser = async (
       throw new AppError(httpStatus.BAD_REQUEST, "Password is required");
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(
       password,
       Number(envConfig.BCRYPT_SALT_ROUND)
     );
 
-    // Upload profile picture (optional)
     let profileImageUrl = "";
     if (profileBuffer && profileOriginalName) {
       const profile_image = await uploadBufferToCloudinary(
@@ -67,21 +65,12 @@ const createUser = async (
       profileImageUrl = profile_image?.secure_url || "";
     }
 
-    // Upload identifier (required)
-    if (!identifier || !identifierBuffer || !identifierOriginalName) {
-      throw new AppError(
-        httpStatus.BAD_REQUEST,
-        "Identifier image is required"
-      );
-    }
-
     const kycImage = await uploadBufferToCloudinary(
       identifierBuffer,
       identifierOriginalName,
       "kyc"
     );
 
-    // ✅ Step 1: Create user
     const newUser = await User.create(
       [
         {
@@ -99,12 +88,13 @@ const createUser = async (
       ],
       { session }
     );
+
     if (!newUser) {
       await deleteImageFromCloudinary(profileImageUrl);
       await deleteImageFromCloudinary(kycImage.secure_url);
     }
 
-    // ✅ Step 2: Create wallet
+    // Create wallet
     await Wallet.create(
       [
         {
@@ -115,7 +105,7 @@ const createUser = async (
       { session }
     );
 
-    // ✅ Step 3: Create initial transaction
+    // Initial transaction
     await Transaction.create(
       [
         {
@@ -141,9 +131,48 @@ const createUser = async (
   }
 };
 
+const getUserById = async (userId: string) => {
+  const user = await User.findById(userId);
+  if (!user) throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  return user;
+};
+
+const updateProfile = async (
+  userId: string,
+  payload: UpdateProfilePayload,
+  profileBuffer?: Buffer,
+  profileOriginalName?: string
+) => {
+  const user = await User.findById(userId);
+  if (!user) throw new AppError(httpStatus.NOT_FOUND, "User not found");
+
+  if (payload.name) user.name = payload.name;
+  if (payload.phone) user.phone = payload.phone;
+  if (payload.password) user.password = payload.password; // pre-save hook should hash
+
+  if (profileBuffer && profileOriginalName) {
+    if (user.profile_picture)
+      await deleteImageFromCloudinary(user.profile_picture);
+
+    const profileImage = await uploadBufferToCloudinary(
+      profileBuffer,
+      profileOriginalName,
+      "profile-pictures"
+    );
+    user.profile_picture = profileImage.secure_url;
+  }
+
+  return user.save();
+};
+
+const deleteUserById = async (userId: string) => {
+  const user = await User.findByIdAndDelete(userId);
+  if (!user) throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  return user;
+};
+
 const getAllUsers = async (query: Record<string, string>) => {
   const initialQuery = User.find({ role: { $in: [Role.USER, Role.AGENT] } });
-
   const queryBuilder = new QueryBuilder(initialQuery, query);
 
   const usersData = queryBuilder
@@ -158,17 +187,12 @@ const getAllUsers = async (query: Record<string, string>) => {
     queryBuilder.getMeta(),
   ]);
 
-  return {
-    data,
-    meta,
-  };
+  return { data, meta };
 };
 
 const updateUserStatus = async (userId: string, status: UserStatus) => {
   const user = await User.findById(userId);
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, "User not found");
-  }
+  if (!user) throw new AppError(httpStatus.NOT_FOUND, "User not found");
 
   user.status = status;
   return user.save();
@@ -176,9 +200,7 @@ const updateUserStatus = async (userId: string, status: UserStatus) => {
 
 const approveAgentOrUser = async (userId: string) => {
   const user = await User.findById(userId);
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, "User not found");
-  }
+  if (!user) throw new AppError(httpStatus.NOT_FOUND, "User not found");
 
   if (![Role.AGENT, Role.USER].includes(user.role)) {
     throw new AppError(httpStatus.BAD_REQUEST, "Invalid user role");
@@ -189,8 +211,21 @@ const approveAgentOrUser = async (userId: string) => {
   return user.save();
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const updateUserById = async (id: string, data: any) => {
+  const user = await User.findByIdAndUpdate(id, data, { new: true });
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+  return user;
+};
+
 export const UserServices = {
   createUser,
+  updateProfile,
+  getUserById,
+  updateUserById,
+  deleteUserById,
   getAllUsers,
   updateUserStatus,
   approveAgentOrUser,

@@ -26,8 +26,15 @@ export enum IdentifierType {
 export enum WalletStatus {
   ACTIVE = "ACTIVE",
   BLOCKED = "BLOCKED",
+  FROZEN ="FROZEN"
 }
 
 // src/types/index.ts or wherever your shared types live
 
 export const bdPhoneRegex = /^(\+8801|01)[0-9]{9}$/;
+
+export interface ResetPasswordPayload {
+  id: string;
+  token: string;
+  newPassword: string;
+}

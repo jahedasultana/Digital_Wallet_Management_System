@@ -35,7 +35,7 @@ export const seedAdmin = async () => {
       email: envConfig.ADMIN_EMAIL,
       phone: envConfig.ADMIN_PHONE,
       password: hashedPassword,
-      profile_picture: "https://dummyimage.com/600x400/000/fff",
+      // profile_picture: "",
       role: Role.ADMIN,
       status: UserStatus.ACTIVE,
       verified: verifyStatus.VERIFIED,

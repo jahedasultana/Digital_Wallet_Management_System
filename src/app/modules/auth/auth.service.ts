@@ -9,7 +9,7 @@ import {
 } from "../../utils/userToken";
 import { JwtPayload } from "jsonwebtoken";
 import envConfig from "../../config/env";
-import { UserStatus, verifyStatus } from "../../types";
+import { ResetPasswordPayload, UserStatus, verifyStatus } from "../../types";
 import jwt from "jsonwebtoken";
 import { sendEmail } from "../../utils/sendMail";
 
@@ -53,28 +53,40 @@ const getNewAccessToken = async (refreshToken: string) => {
   };
 };
 
-const resetPassword = async (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  payload: Record<string, any>,
-  decodedToken: JwtPayload
-) => {
-  if (payload.id != decodedToken.userId) {
-    throw new AppError(401, "You can not reset your password");
+const resetPassword = async (payload: ResetPasswordPayload) => {
+  const { id, token, newPassword } = payload;
+
+  if (!id || !token) {
+    throw new AppError(400, "Invalid or missing reset token");
   }
 
-  const isUserExist = await User.findById(decodedToken.userId);
-  if (!isUserExist) {
-    throw new AppError(401, "User does not exist");
+  let decoded: JwtPayload;
+  try {
+    decoded = jwt.verify(token, envConfig.JWT_ACCESS_SECRET) as JwtPayload;
+  } catch (err) {
+
+    throw new AppError(401, `Reset token expired or invalid: ${err}`);
+  }
+
+  // ✅ Ensure token userId matches the one in query param
+  if (id !== decoded.userId) {
+    throw new AppError(401, "You are not allowed to reset this password");
+  }
+
+  const user = await User.findById(decoded.userId);
+  if (!user) {
+    throw new AppError(404, "User does not exist");
   }
 
   const hashedPassword = await bcrypt.hash(
-    payload.newPassword,
+    newPassword,
     Number(envConfig.BCRYPT_SALT_ROUND)
   );
 
-  isUserExist.password = hashedPassword;
+  user.password = hashedPassword;
+  await user.save();
 
-  await isUserExist.save();
+  return true;
 };
 
 const forgotPassword = async (email: string) => {

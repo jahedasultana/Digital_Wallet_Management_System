@@ -16,14 +16,13 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "vercel-build": "tsc"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@types/cookie-parser": "^1.4.9",
     "@types/ejs": "^3.1.5",
     "@types/multer": "^2.0.0",
-    "@types/nodemailer": "^6.4.17",
+    "@types/nodemailer": "6.4.19",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.7.0",
     "cookie-parser": "^1.4.7",

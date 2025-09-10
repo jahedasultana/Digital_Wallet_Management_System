@@ -5,17 +5,16 @@ import { sendResponse } from "../../utils/sendResponse";
 import { UserServices } from "./user.service";
 import { UserStatus } from "../../types";
 
+// Create user
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const files = req.files as Record<string, Express.Multer.File[]> | undefined;
 
-  // Extract buffers and original filenames safely
   const profileBuffer = files?.["profile_picture"]?.[0]?.buffer;
   const profileOriginalName = files?.["profile_picture"]?.[0]?.originalname;
 
   const identifierBuffer = files?.["identifier_image"]?.[0]?.buffer;
   const identifierOriginalName = files?.["identifier_image"]?.[0]?.originalname;
 
-  //   // Call service to create user
   const user = await UserServices.createUser(
     req.body,
     profileBuffer,
@@ -27,19 +26,22 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
-    message: "User Created Successfully",
+    message: "User created successfully",
     data: user,
   });
 });
 
-const getAllUsers = catchAsync(async (req, res) => {
+// Get all users (Admin only)
+const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const query = Object.fromEntries(
     Object.entries(req.query).map(([key, value]) => [
       key,
       Array.isArray(value) ? value.join(",") : String(value),
     ])
   ) as Record<string, string>;
+
   const result = await UserServices.getAllUsers(query);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -49,7 +51,45 @@ const getAllUsers = catchAsync(async (req, res) => {
   });
 });
 
-const blockUserWallet = catchAsync(async (req, res) => {
+// View own profile
+const getMyProfile = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user.userId;
+  const user = await UserServices.getUserById(userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Profile retrieved successfully",
+    data: user,
+  });
+});
+
+// Update own profile
+const updateProfile = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user.userId;
+  const payload = req.body;
+
+  const file = req.file;
+  const profileBuffer = file?.buffer;
+  const profileOriginalName = file?.originalname;
+
+  const updatedUser = await UserServices.updateProfile(
+    userId,
+    payload,
+    profileBuffer,
+    profileOriginalName
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Profile updated successfully",
+    data: updatedUser,
+  });
+});
+
+// Block user wallet
+const blockUserWallet = catchAsync(async (req: Request, res: Response) => {
   const result = await UserServices.updateUserStatus(
     req.params.id,
     UserStatus.BLOCKED
@@ -62,7 +102,8 @@ const blockUserWallet = catchAsync(async (req, res) => {
   });
 });
 
-const unblockUserWallet = catchAsync(async (req, res) => {
+// Unblock user wallet
+const unblockUserWallet = catchAsync(async (req: Request, res: Response) => {
   const result = await UserServices.updateUserStatus(
     req.params.id,
     UserStatus.ACTIVE
@@ -75,7 +116,8 @@ const unblockUserWallet = catchAsync(async (req, res) => {
   });
 });
 
-const approveAgent = catchAsync(async (req, res) => {
+// Approve agent
+const approveAgent = catchAsync(async (req: Request, res: Response) => {
   const result = await UserServices.approveAgentOrUser(req.params.id);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -85,7 +127,8 @@ const approveAgent = catchAsync(async (req, res) => {
   });
 });
 
-const suspendAgent = catchAsync(async (req, res) => {
+// Suspend agent
+const suspendAgent = catchAsync(async (req: Request, res: Response) => {
   const result = await UserServices.updateUserStatus(
     req.params.id,
     UserStatus.SUSPENDED
@@ -98,11 +141,53 @@ const suspendAgent = catchAsync(async (req, res) => {
   });
 });
 
+// Get individual user info (Admin only)
+const getUserById = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserServices.getUserById(req.params.id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User fetched successfully",
+    data: result,
+  });
+});
+
+// Update individual user info (Admin only)
+const updateUserById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const updateData = req.body;
+
+  const result = await UserServices.updateUserById(id, updateData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User updated successfully",
+    data: result,
+  });
+});
+
+// Delete user (Admin only)
+const deleteUser = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserServices.deleteUserById(req.params.id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User deleted successfully",
+    data: result,
+  });
+});
+
 export const UserControllers = {
   createUser,
   getAllUsers,
+  getUserById,
+  updateUserById,
+  getMyProfile,
+  updateProfile,
   blockUserWallet,
   unblockUserWallet,
   approveAgent,
   suspendAgent,
+  deleteUser,
 };

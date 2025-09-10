@@ -21,12 +21,14 @@ const checkWallet = async (userId: string) => {
   return wallet;
 };
 
+// ✅ User transactions
 const getMyTransactions = async (userId: string) => {
   return Transaction.find({
     $or: [{ sender: userId }, { receiver: userId }],
   }).sort({ createdAt: -1 });
 };
 
+// ✅ Admin transactions (all, with filters/search/pagination)
 const getAllTransactions = async (query: Record<string, string>) => {
   const queryBuilder = new QueryBuilder(Transaction.find(), query);
 
@@ -45,22 +47,19 @@ const getAllTransactions = async (query: Record<string, string>) => {
   return { data, meta };
 };
 
+// ✅ Agent cash-in
 const cashIn = async (agentId: string, userPhone: string, amount: number) => {
   if (amount <= 0) {
     throw new AppError(httpStatus.BAD_REQUEST, "Amount must be greater than 0");
   }
 
   const agentWallet = await checkWallet(agentId);
-
   const user = await User.findOne({ phone: userPhone });
-
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, "User not found");
-  }
+  if (!user) throw new AppError(httpStatus.NOT_FOUND, "User not found");
 
   const userWallet = await checkWallet(user._id.toString());
-
   userWallet.balance += amount;
+
   const commission = amount * 0.01;
   agentWallet.balance += commission;
 
@@ -78,6 +77,7 @@ const cashIn = async (agentId: string, userPhone: string, amount: number) => {
   return txn;
 };
 
+// ✅ Agent cash-out
 const cashOut = async (agentId: string, userPhone: string, amount: number) => {
   if (amount <= 0) {
     throw new AppError(httpStatus.BAD_REQUEST, "Amount must be greater than 0");
@@ -85,13 +85,9 @@ const cashOut = async (agentId: string, userPhone: string, amount: number) => {
 
   const agentWallet = await checkWallet(agentId);
   const user = await User.findOne({ phone: userPhone });
-
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, "User not found");
-  }
+  if (!user) throw new AppError(httpStatus.NOT_FOUND, "User not found");
 
   const userWallet = await checkWallet(user._id.toString());
-
   if (userWallet.balance < amount) {
     throw new AppError(httpStatus.BAD_REQUEST, "Insufficient balance");
   }
@@ -114,9 +110,37 @@ const cashOut = async (agentId: string, userPhone: string, amount: number) => {
   return txn;
 };
 
+// 🔹 NEW: Agent transactions (transactions sent/received by agent)
+const getAgentTransactions = async (agentId: string) => {
+  return Transaction.find({
+    $or: [{ sender: agentId }, { receiver: agentId }],
+  }).sort({ createdAt: -1 });
+};
+
+// 🔹 NEW: Admin transactions (filtered, searchable, paginated)
+const getAdminTransactions = async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(Transaction.find(), query);
+
+  const transactionQuery = queryBuilder
+    .filter()
+    .search(["type", "status"])
+    .sort()
+    .fields()
+    .paginate();
+
+  const [data, meta] = await Promise.all([
+    transactionQuery.build().populate("sender receiver", "name email phone"),
+    queryBuilder.getMeta(),
+  ]);
+
+  return { data, meta };
+};
+
 export const TransactionService = {
   getMyTransactions,
   getAllTransactions,
   cashIn,
   cashOut,
+  getAgentTransactions,
+  getAdminTransactions,
 };

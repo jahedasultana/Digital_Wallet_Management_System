@@ -28,3 +28,8 @@ export interface IUser {
   createdAt?: Date;
   updatedAt?: Date;
 }
+export interface UpdateProfilePayload {
+  name?: string;
+  phone?: string;
+  password?: string;
+}

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { NextFunction, Request, Response } from "express";
+import { CookieOptions, NextFunction, Request, Response } from "express";
 import httpStatus from "http-status-codes";
 import { JwtPayload } from "jsonwebtoken";
 import { catchAsync } from "../../utils/catchAsync";
@@ -46,17 +46,15 @@ const getNewAccessToken = catchAsync(
   }
 );
 const logout = catchAsync(
-  async (_req: Request, res: Response, next: NextFunction) => {
-    res.clearCookie("accessToken", {
+  async (_req: Request, res: Response, _next: NextFunction) => {
+    const cookieOptions: CookieOptions = {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-    });
-    res.clearCookie("refreshToken", {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-    });
+      secure: true,
+      sameSite: "none",
+    };
+
+    res.clearCookie("accessToken", cookieOptions);
+    res.clearCookie("refreshToken", cookieOptions);
 
     sendResponse(res, {
       success: true,
@@ -66,6 +64,7 @@ const logout = catchAsync(
     });
   }
 );
+
 const changePassword = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const newPassword = req.body.newPassword;
@@ -86,20 +85,26 @@ const changePassword = catchAsync(
     });
   }
 );
-const resetPassword = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const decodedToken = req.user;
+const resetPassword = catchAsync(async (req: Request, res: Response) => {
+  const id = req.query.id as string;
+  const token = req.query.token as string;
+  const { newPassword } = req.body;
 
-    await AuthServices.resetPassword(req.body, decodedToken as JwtPayload);
+  if (!id) throw new AppError(httpStatus.BAD_REQUEST, "ID is required");
+  if (!token) throw new AppError(httpStatus.BAD_REQUEST, "Token is required");
+  if (!newPassword)
+    throw new AppError(httpStatus.BAD_REQUEST, "New password is required");
 
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: "Password Changed Successfully",
-      data: null,
-    });
-  }
-);
+  await AuthServices.resetPassword({ id, token, newPassword });
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Password changed successfully",
+    data: null,
+  });
+});
+
 const setPassword = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const decodedToken = req.user as JwtPayload;

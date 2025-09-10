@@ -1,3 +1,5 @@
+// src/app/modules/wallet/wallet.route.ts
+
 import { Router } from "express";
 import { checkAuth } from "../../middlewares/authCheck";
 import { Role } from "../../types";
@@ -32,6 +34,37 @@ const router = Router();
  *                 currency: { type: string }
  *       401: { description: Unauthorized }
  */
+router.get(
+  "/me",
+  checkAuth(Role.USER, Role.AGENT),
+  WalletController.viewMyWallet
+);
+
+/**
+ * @openapi
+ * /wallet/agent/me:
+ *   get:
+ *     summary: Get logged-in agent's wallet details
+ *     tags: [Wallet]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Agent wallet information retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 balance: { type: number }
+ *                 currency: { type: string }
+ *       401: { description: Unauthorized }
+ */
+router.get(
+  "/agent/me",
+  checkAuth(Role.AGENT),
+  WalletController.viewAgentWallet
+);
 
 /**
  * @openapi
@@ -55,6 +88,7 @@ const router = Router();
  *       400: { description: Invalid amount }
  *       401: { description: Unauthorized }
  */
+router.patch("/top-up", checkAuth(Role.USER), WalletController.topUpWallet);
 
 /**
  * @openapi
@@ -78,6 +112,11 @@ const router = Router();
  *       400: { description: Insufficient balance or invalid amount }
  *       401: { description: Unauthorized }
  */
+router.patch(
+  "/withdraw",
+  checkAuth(Role.USER),
+  WalletController.withdrawFromWallet
+);
 
 /**
  * @openapi
@@ -102,6 +141,7 @@ const router = Router();
  *       400: { description: Insufficient balance or invalid request }
  *       401: { description: Unauthorized }
  */
+router.patch("/send", checkAuth(Role.USER), WalletController.sendMoney);
 
 /**
  * @openapi
@@ -115,22 +155,77 @@ const router = Router();
  *       200: { description: List of all wallets }
  *       401: { description: Unauthorized }
  */
-
-router.get(
-  "/me",
-  checkAuth(Role.USER, Role.AGENT),
-  WalletController.viewMyWallet
-);
-
-router.patch("/top-up", checkAuth(Role.USER), WalletController.topUpWallet);
-
-router.patch(
-  "/withdraw",
-  checkAuth(Role.USER),
-  WalletController.withdrawFromWallet
-);
-
-router.patch("/send", checkAuth(Role.USER), WalletController.sendMoney);
-
 router.get("/", checkAuth(Role.ADMIN), WalletController.viewAllWallets);
+
+/**
+ * @openapi
+ * /wallet/admin/stats:
+ *   get:
+ *     summary: Get admin wallet statistics (total wallets, total balance, active/blocked counts)
+ *     tags: [Wallet]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Wallet statistics retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 totalWallets: { type: number }
+ *                 totalBalance: { type: number }
+ *                 activeWallets: { type: number }
+ *                 blockedWallets: { type: number }
+ *       401: { description: Unauthorized }
+ */
+router.get(
+  "/admin/stats",
+  checkAuth(Role.ADMIN),
+  WalletController.getWalletStats
+);
+
+/**
+ * @openapi
+ * /wallet/admin/{walletId}/status:
+ *   patch:
+ *     summary: Block or Unblock a user's wallet
+ *     tags: [Wallet]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: walletId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Wallet ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - status
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [ACTIVE, BLOCKED]
+ *     responses:
+ *       200:
+ *         description: Wallet status updated successfully
+ *       400:
+ *         description: Invalid request
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Wallet not found
+ */
+router.patch(
+  "/admin/:walletId/:status",
+  checkAuth(Role.ADMIN),
+  WalletController.updateWalletStatus
+);
+
 export const WalletRoutes = router;
