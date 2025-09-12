@@ -1,10 +1,15 @@
-import { Types } from "mongoose";
-import { WalletStatus } from "../../types";
+import { Document, Types } from "mongoose";
+
+export enum WalletStatus {
+  active = "active",
+  blocked = "blocked",
+}
 
 export interface IWallet {
-  user: Types.ObjectId; // Reference to User
-  balance: number; // Available balance
-  status: WalletStatus; // Whether wallet is blocked
-  createdAt?: Date; // Auto timestamp
-  updatedAt?: Date; // Auto timestamp
+  _id?: Types.ObjectId;
+  userId: Types.ObjectId;
+  balance: number;
+  currency: "BDT";
+  status: WalletStatus;
 }
+

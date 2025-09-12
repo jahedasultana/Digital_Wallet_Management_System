@@ -1,43 +1,53 @@
-import httpStatus from "http-status-codes";
-import { catchAsync } from "../../utils/catchAsync";
-import { StatServices } from "./stats.service";
+import { NextFunction, Request, Response } from "express";
+import catchAsync from "../../utils/catchAsync";
+import { StatsService } from "./stats.service";
 import { sendResponse } from "../../utils/sendResponse";
+import httpStatus from "http-status-codes";
 
-// 📊 User Stats
-const getUserStats = catchAsync(async (req, res) => {
-  const result = await StatServices.getUserStats(req.user.userId);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "User stats retrieved successfully",
-    data: result,
-  });
-});
+const getDashboardStats = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user;
+    const result = await StatsService.getDashboardStats(decodedToken.userId);
 
-// 📊 Agent Stats
-const getAgentStats = catchAsync(async (req, res) => {
-  const result = await StatServices.getAgentStats(req.user.userId);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Agent stats retrieved successfully",
-    data: result,
-  });
-});
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Dashboard stats get successfully",
+      data: result,
+    });
+  }
+);
 
-// 📊 Admin Stats
-const getAdminStats = catchAsync(async (req, res) => {
-  const result = await StatServices.getAdminStats();
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Admin stats retrieved successfully",
-    data: result,
-  });
-});
+const getTransactionStats = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const decodedToken = req.user;
+    const result = await StatsService.getTransactionStats(decodedToken.userId);
 
-export const StatController = {
-  getUserStats,
-  getAgentStats,
-  getAdminStats,
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Transaction stats get successfully",
+      data: result,
+    });
+  }
+);
+
+const getTransactionSummary = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await StatsService.getTransactionSummary();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Transaction summary get successfully",
+      data: result,
+    });
+  }
+);
+
+export const StatsController = {
+  getDashboardStats,
+  getTransactionStats,
+  getTransactionSummary
 };
+

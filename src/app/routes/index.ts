@@ -1,20 +1,25 @@
 import { Router } from "express";
-import { AuthRoutes } from "../modules/auth/auth.routes";
-import { UserRoutes } from "../modules/user/user.routes";
-import { WalletRoutes } from "../modules/wallet/wallet.routes";
-import { TransactionRoutes } from "../modules/transaction/transaction.routes";
-import { StatRoutes } from "../modules/stats/stats.routes";
+import { UserRoutes } from "../modules/user/user.route";
+import { AuthRoutes } from "../modules/auth/auth.route";
+import { AgentRoutes } from "../modules/agent/agent.route";
+import { WalletRoutes } from "../modules/wallet/wallet.route";
+import { TransactionRoutes } from "../modules/transaction/transaction.route";
+import { StatsRoutes } from "../modules/stats/stats.route";
 
 export const router = Router();
 
 const moduleRoutes = [
   {
-    path: "/auth",
-    route: AuthRoutes,
-  },
-  {
     path: "/user",
     route: UserRoutes,
+  },
+  {
+    path: "/agent",
+    route: AgentRoutes,
+  },
+  {
+    path: "/auth",
+    route: AuthRoutes,
   },
   {
     path: "/wallet",
@@ -26,7 +31,7 @@ const moduleRoutes = [
   },
   {
     path: "/stats",
-    route: StatRoutes,
+    route: StatsRoutes,
   },
 ];
 

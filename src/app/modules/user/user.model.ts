@@ -1,69 +1,31 @@
-import { Schema, model } from "mongoose";
-import { IUser } from "./user.interface";
-import { Role, UserStatus, IdentifierType, verifyStatus } from "../../types";
+import { model, Schema } from "mongoose";
+import { IsActive, IUser, Role } from "./user.interface";
 
 const userSchema = new Schema<IUser>(
   {
-    // Basic Info
-    name: {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    role: { type: String, enum: Object.values(Role) },
+    password: { type: String },
+    phone: { type: String, required: true, unique: true },
+    picture: { type: String },
+    address: { type: String, trim: true },
+    feeRate: { type: Number,},
+    commissionRate: { type: Number },
+    isActive: {
       type: String,
-      required: true,
-      trim: true,
+      enum: Object.values(IsActive),
+      default: IsActive.active,
     },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      trim: true,
-    },
-    phone: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-
-    profile_picture: {
-      type: String,
-      required: false,
-      default: null,
-    },
-
-    // Role & Status
-    role: {
-      type: String,
-      enum: Object.values(Role),
-      default: Role.USER,
-    },
-    status: {
-      type: String,
-      enum: Object.values(UserStatus),
-      default: UserStatus.ACTIVE,
-    },
-    verified: {
-      type: String,
-      enum: Object.values(verifyStatus),
-      default: verifyStatus.PENDING,
-    },
-
-    // Identifier as a flat object, no nested Schema
-    identifier: {
-      type: String,
-      enum: Object.values(IdentifierType),
-      required: true,
-    },
-    identifier_image: {
-      type: String,
-      required: true,
-    },
+    isApproved: { type: Boolean, default: false },
+    isVerified: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false },
+    walletId: { type: Schema.Types.ObjectId, ref: "Wallet" },
+    transactionId: [{ type: Schema.Types.ObjectId, ref: "Transaction" }],
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
 

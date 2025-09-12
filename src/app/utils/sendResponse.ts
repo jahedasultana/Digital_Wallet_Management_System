@@ -1,10 +1,10 @@
 import { Response } from "express";
 
 interface TMeta {
-  page: number;
-  limit: number;
-  totalPage: number;
-  total: number;
+  page?: number;
+  limit?: number;
+  totalPage?: number;
+  totalDocument?: number;
 }
 
 interface TResponse<T> {
@@ -20,7 +20,7 @@ export const sendResponse = <T>(res: Response, data: TResponse<T>) => {
     statusCode: data.statusCode,
     success: data.success,
     message: data.message,
-    meta: data.meta,
     data: data.data,
+    meta: data.meta,
   });
 };

@@ -1,60 +1,97 @@
 /* eslint-disable no-console */
-
-import bcrypt from "bcrypt";
+import { envVars } from "../config/env";
+import { IsActive, IUser, Role } from "../modules/user/user.interface";
 import { User } from "../modules/user/user.model";
-import { Wallet } from "../modules/wallet/wallet.model"; // ✅ import Wallet model
-import { Role, UserStatus, IdentifierType, verifyStatus } from "../types";
-import envConfig from "../config/env";
+import bcryptjs from "bcryptjs";
+import { IWallet, WalletStatus } from "../modules/wallet/wallet.interface";
+import { Wallet } from "../modules/wallet/wallet.model";
+import mongoose, { Types } from "mongoose";
+import { Transaction } from "../modules/transaction/transaction.model";
+import {
+  ITransaction,
+  TransactionStatus,
+  TransactionType,
+} from "../modules/transaction/transaction.interface";
 
 export const seedAdmin = async () => {
+  const session = await mongoose.startSession();
   try {
-    const isAdminExist = await User.findOne({
-      email: envConfig.ADMIN_EMAIL,
-    });
+    await session.withTransaction(async () => {
+      const isAdminExist = await User.findOne({ email: envVars.ADMIN_EMAIL });
 
-    if (isAdminExist) {
-      console.log("Admin Already Exists!");
-      return;
-    }
+      if (isAdminExist) {
+        console.log("Admin already exists.");
+        return;
+      }
 
-    console.log("Trying to create Admin...");
-
-    if (!envConfig.ADMIN_PASSWORD) {
-      throw new Error(
-        "ADMIN_PASSWORD is not defined in environment variables."
+      const hashPassword = await bcryptjs.hash(
+        envVars.ADMIN_PASSWORD,
+        Number(envVars.BCRYPT_SALT_ROUND)
       );
-    }
 
-    const hashedPassword = await bcrypt.hash(
-      envConfig.ADMIN_PASSWORD,
-      Number(envConfig.BCRYPT_SALT_ROUND)
-    );
+      const adminPayload: IUser = {
+        name: "Admin",
+        email: envVars.ADMIN_EMAIL,
+        role: Role.admin,
+        phone: envVars.ADMIN_PHONE,
+        password: hashPassword,
+        isVerified: true,
+        isApproved: true,
+        commissionRate: Number(envVars.ADMIN_COMMISSION_RATE),
+        isActive: IsActive.active,
+      };
 
-    const payload = {
-      name: "Admin",
-      email: envConfig.ADMIN_EMAIL,
-      phone: envConfig.ADMIN_PHONE,
-      password: hashedPassword,
-      // profile_picture: "",
-      role: Role.ADMIN,
-      status: UserStatus.ACTIVE,
-      verified: verifyStatus.VERIFIED,
-      identifier: IdentifierType.NID,
-      identifier_image: "https://dummyimage.com/600x400/000/fff",
-    };
+      const [createAdmin] = await User.create([adminPayload], { session });
 
-    const superAdmin = await User.create(payload);
+      if (!createAdmin) {
+        throw new Error("Admin creation failed");
+      }
 
-    // ✅ Create Wallet for Admin
-    await Wallet.create({
-      user: superAdmin._id,
-      balance: 50, // or set a custom admin starting balance
-      status: "ACTIVE",
+      const walletPayload: IWallet = {
+        userId: createAdmin._id,
+        balance: 200000,
+        currency: "BDT",
+        status: WalletStatus.active,
+      };
+
+      const [createWallet] = await Wallet.create([walletPayload], { session });
+
+      if (!createWallet) {
+        throw new Error("Wallet creation failed");
+      }
+
+      const transactionPayload: ITransaction = {
+        fromWalletId: createWallet._id as Types.ObjectId,
+        toWalletId: createWallet._id as Types.ObjectId,
+        type: TransactionType.add_money,
+        status: TransactionStatus.approved,
+        amount: 200000,
+        commission: 0,
+        currentBalance: 200000,
+        initiatedBy: createAdmin._id,
+        purpose: "Initial admin funding",
+      };
+
+      const [createdTransaction] = await Transaction.create(
+        [transactionPayload],
+        { session }
+      );
+
+      if (!createdTransaction) {
+        throw new Error("Transaction creation failed");
+      }
+
+      createAdmin.walletId = createWallet._id as Types.ObjectId;
+      createAdmin.transactionId = [createdTransaction._id];
+      await createAdmin.save({ session });
+
+      await session.commitTransaction();
+      console.log("Admin and wallet seeded successfully.");
     });
-
-    console.log("✅ Admin & Wallet Created Successfully!\n");
-    console.log(superAdmin);
   } catch (error) {
-    console.error("❌ Failed to create Admin:", error);
+    await session.abortTransaction();
+    console.log(error);
+  } finally {
+    await session.endSession();
   }
 };

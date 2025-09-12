@@ -1,15 +1,31 @@
 import { Types } from "mongoose";
-import { TransactionStatus, TransactionType } from "./transaction.constant";
+
+export enum TransactionType {
+  add_money = "add_money",
+  withdraw = "withdraw",
+  send_money = "send_money",
+  cash_in = "cash_in",
+  cash_out = "cash_out",
+  receive_money = "receive_money",
+  fee = "fee",
+}
+
+export enum TransactionStatus {
+  pending = "pending",
+  approved = "approved",
+  declined = "declined",
+}
 
 export interface ITransaction {
+  _id?: Types.ObjectId;
+  fromWalletId?: Types.ObjectId;
+  toWalletId: Types.ObjectId;
   type: TransactionType;
-  sender: Types.ObjectId | null;
-  receiver: Types.ObjectId;
-  amount: number;
   status: TransactionStatus;
-  fee: number; // Required
-  commission: number; // Required (0 if not agent)
-  notes?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  amount: number;
+  fee?: number;
+  commission?: number;
+  currentBalance: number;
+  initiatedBy: Types.ObjectId;
+  purpose?: string;
 }

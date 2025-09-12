@@ -1,34 +1,129 @@
-import AppError from "../../errorHelpers/AppError";
-import { IUser } from "../user/user.interface";
-import { User } from "../user/user.model";
 import httpStatus from "http-status-codes";
-import bcrypt from "bcrypt";
+import AppError from "../../errorHelpers/AppError";
+import { IUser, Role } from "../user/user.interface";
+import { User } from "../user/user.model";
 import {
   createNewAccessTokenWithRefreshToken,
   createUserTokens,
-} from "../../utils/userToken";
+} from "../../utils/userTokens";
+import bcryptjs from "bcryptjs";
 import { JwtPayload } from "jsonwebtoken";
-import envConfig from "../../config/env";
-import { ResetPasswordPayload, UserStatus, verifyStatus } from "../../types";
-import jwt from "jsonwebtoken";
-import { sendEmail } from "../../utils/sendMail";
+import { envVars } from "../../config/env";
+import { WalletService } from "../wallet/wallet.service";
+import { TransactionService } from "../transaction/transaction.service";
+import { Types } from "mongoose";
+import { getAdminWallet } from "../../utils/getAdminWallet";
+import { incrementWalletBalance } from "../../utils/incrementWalletBalance";
+import { IWallet } from "../wallet/wallet.interface";
 
-const credentialsLogin = async (payload: Partial<IUser>) => {
+const register = async (payload: Partial<IUser>, role: Role) => {
+  const session = await User.startSession();
+  session.startTransaction();
+
+  try {
+    const { email, password, phone, ...rest } = payload;
+
+    const isUserExist = await User.findOne({ email });
+    if (isUserExist) {
+      throw new AppError(httpStatus.BAD_REQUEST, "User already Exist!");
+    }
+
+    const isPhoneExist = await User.findOne({ phone });
+    if (isPhoneExist) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Phone number already Exist!");
+    }
+
+    const hashedPassword = await bcryptjs.hash(
+      password as string,
+      Number(envVars.BCRYPT_SALT_ROUND)
+    );
+
+    const userPayload: Partial<IUser> = {
+      email,
+      password: hashedPassword,
+      phone,
+      role,
+      ...rest,
+    };
+
+    if (role === Role.agent) {
+      userPayload.feeRate = Number(envVars.AGENT_FEE_RATE) || 15;
+      userPayload.commissionRate = Number(envVars.AGENT_COMMISSION_RATE) || 5;
+      userPayload.isApproved = false;
+    } else if (role === Role.user) {
+      userPayload.feeRate = Number(envVars.USER_FEE_RATE) || 20;
+      userPayload.isApproved = true;
+    }
+
+    const [user] = await User.create([userPayload], { session });
+
+    const userWallet = await WalletService.createWallet(user._id, session);
+    user.walletId = userWallet._id as Types.ObjectId;
+    await user.save({ session });
+
+    // let responseData;
+
+    // if (role === Role.agent) {
+    //   const agentInfo = user.toObject();
+    //   delete agentInfo.password;
+    //   responseData = agentInfo;
+    // }
+
+    const initialFundingAmount = Number(envVars.USER_INITIAL_FUNDING_AMOUNT);
+    const adminWallet = await getAdminWallet(session);
+
+    if (adminWallet.balance < initialFundingAmount) {
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        "Admin wallet has insufficient balance"
+      );
+    }
+
+    const [updatedAdminWallet, updatedUserWallet] = await Promise.all([
+      incrementWalletBalance(adminWallet._id, -initialFundingAmount, session),
+      incrementWalletBalance(
+        userWallet._id as Types.ObjectId,
+        initialFundingAmount,
+        session
+      ),
+    ]);
+
+    const updatedUser = await TransactionService.initialFunding(
+      updatedAdminWallet as IWallet,
+      updatedUserWallet as IWallet,
+      initialFundingAmount,
+      session
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+    return updatedUser;
+  } catch (error: any) {
+    await session.abortTransaction();
+    session.endSession();
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `User Create Error! ${error.message}`
+    );
+  }
+};
+
+const credentialLogin = async (payload: Partial<IUser>) => {
   const { email, password } = payload;
 
   const isUserExist = await User.findOne({ email });
 
   if (!isUserExist) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Email does not exist");
+    throw new AppError(httpStatus.BAD_REQUEST, "User Not Exist!");
   }
 
-  const isPasswordMatched = await bcrypt.compare(
+  const isPasswordMatched = await bcryptjs.compare(
     password as string,
     isUserExist.password as string
   );
 
   if (!isPasswordMatched) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Incorrect Password");
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid Password!");
   }
 
   const userTokens = createUserTokens(isUserExist);
@@ -43,6 +138,65 @@ const credentialsLogin = async (payload: Partial<IUser>) => {
   };
 };
 
+const updateUser = async (
+  userId: string,
+  payload: Partial<IUser>,
+  decodedToken: JwtPayload
+) => {
+  if (
+    [Role.admin, Role.agent, Role.user].includes(decodedToken.role as Role) &&
+    userId !== decodedToken.userId
+  ) {
+    throw new AppError(httpStatus.FORBIDDEN, "You are not authorized");
+  }
+
+  const existingUser = await User.findById(userId);
+  if (!existingUser) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  if (payload.role) {
+    if (decodedToken.userId === userId) {
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        "You are not allowed to update your own role"
+      );
+    }
+
+    if ([Role.agent, Role.user].includes(decodedToken.role as Role)) {
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        "You are not authorized to change roles"
+      );
+    }
+  }
+
+  const restrictedFields = ["isActive", "isDeleted", "isVerified"];
+  if (
+    restrictedFields.some((field) => field in payload) &&
+    [Role.user, Role.agent].includes(decodedToken.role as Role)
+  ) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "You are not authorized to update these fields"
+    );
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(userId, payload, {
+    new: true,
+    runValidators: true,
+  });
+
+  return updatedUser;
+};
+
+const getMe = async (userId: string) => {
+  const myInfo = await User.findById(userId)
+    .select("-password")
+    .populate("walletId", "balance status")
+  return myInfo;
+};
+
 const getNewAccessToken = async (refreshToken: string) => {
   const newAccessToken = await createNewAccessTokenWithRefreshToken(
     refreshToken
@@ -53,133 +207,42 @@ const getNewAccessToken = async (refreshToken: string) => {
   };
 };
 
-const resetPassword = async (payload: ResetPasswordPayload) => {
-  const { id, token, newPassword } = payload;
-
-  if (!id || !token) {
-    throw new AppError(400, "Invalid or missing reset token");
-  }
-
-  let decoded: JwtPayload;
-  try {
-    decoded = jwt.verify(token, envConfig.JWT_ACCESS_SECRET) as JwtPayload;
-  } catch (err) {
-
-    throw new AppError(401, `Reset token expired or invalid: ${err}`);
-  }
-
-  // ✅ Ensure token userId matches the one in query param
-  if (id !== decoded.userId) {
-    throw new AppError(401, "You are not allowed to reset this password");
-  }
-
-  const user = await User.findById(decoded.userId);
-  if (!user) {
-    throw new AppError(404, "User does not exist");
-  }
-
-  const hashedPassword = await bcrypt.hash(
-    newPassword,
-    Number(envConfig.BCRYPT_SALT_ROUND)
-  );
-
-  user.password = hashedPassword;
-  await user.save();
-
-  return true;
-};
-
-const forgotPassword = async (email: string) => {
-  const isUserExist = await User.findOne({ email });
-
-  if (!isUserExist) {
-    throw new AppError(httpStatus.BAD_REQUEST, "User does not exist");
-  }
-  if (isUserExist.verified !== verifyStatus.VERIFIED) {
-    throw new AppError(httpStatus.BAD_REQUEST, "User is not verified");
-  }
-  if (
-    isUserExist.status === UserStatus.BLOCKED ||
-    isUserExist.status === UserStatus.INACTIVE ||
-    isUserExist.status === UserStatus.SUSPENDED
-  ) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      `User is ${isUserExist.status.toLowerCase()}`
-    );
-  }
-
-  const jwtPayload = {
-    userId: isUserExist._id,
-    email: isUserExist.email,
-    role: isUserExist.role,
-  };
-
-  const resetToken = jwt.sign(jwtPayload, envConfig.JWT_ACCESS_SECRET, {
-    expiresIn: "10m",
-  });
-
-  const resetUILink = `${envConfig.FRONTEND_URL}/reset-password?id=${isUserExist._id}&token=${resetToken}`;
-
-  sendEmail({
-    to: isUserExist.email,
-    subject: "Password Reset",
-    templateName: "forgotPassword",
-    templateData: {
-      name: isUserExist.name,
-      resetUILink,
-    },
-  });
-};
-
-const setPassword = async (userId: string, plainPassword: string) => {
-  const user = await User.findById(userId);
-
-  if (!user) {
-    throw new AppError(404, "User not found");
-  }
-
-  const hashedPassword = await bcrypt.hash(
-    plainPassword,
-    Number(envConfig.BCRYPT_SALT_ROUND)
-  );
-
-  user.password = hashedPassword;
-
-  await user.save();
-};
-
 const changePassword = async (
+  decodedToken: JwtPayload,
   oldPassword: string,
-  newPassword: string,
-  decodedToken: JwtPayload
+  newPassword: string
 ) => {
   const user = await User.findById(decodedToken.userId);
 
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, "User not found");
-  }
-
-  const isOldPasswordMatch = await bcrypt.compare(
+  const isOldPasswordMatch = await bcryptjs.compare(
     oldPassword,
-    user.password as string
+    user!.password as string
   );
+
   if (!isOldPasswordMatch) {
-    throw new AppError(httpStatus.UNAUTHORIZED, "Old Password does not match");
+    throw new AppError(httpStatus.UNAUTHORIZED, "Old password dose not match");
   }
 
-  user.password = await bcrypt.hash(
+  if (oldPassword === newPassword) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "New password cannot be the same as old password"
+    );
+  }
+
+  user!.password = await bcryptjs.hash(
     newPassword,
-    Number(envConfig.BCRYPT_SALT_ROUND)
+    Number(envVars.BCRYPT_SALT_ROUND)
   );
 
-  await user.save();
+  user!.save();
 };
-export const AuthServices = {
-  credentialsLogin,
-  changePassword,
+
+export const AuthService = {
+  register,
+  credentialLogin,
+  updateUser,
+  getMe,
   getNewAccessToken,
-  resetPassword,
-  forgotPassword,
-  setPassword,
+  changePassword,
 };

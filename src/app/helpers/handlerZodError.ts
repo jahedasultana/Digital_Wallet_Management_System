@@ -4,10 +4,10 @@ import {
   TGenericErrorResponse,
 } from "../interfaces/error.types";
 
-export const handlerZodError = (err: any): TGenericErrorResponse => {
+export const handlerZodError = (error: any): TGenericErrorResponse => {
   const errorSources: TErrorSources[] = [];
 
-  err.issues.forEach((issue: any) => {
+  error.issues.forEach((issue: any) => {
     errorSources.push({
       path: issue.path[issue.path.length - 1],
       message: issue.message,

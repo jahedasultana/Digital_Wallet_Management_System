@@ -1,253 +1,330 @@
-import mongoose from "mongoose";
+import { ClientSession, Types } from "mongoose";
+import { IWallet, WalletStatus } from "./wallet.interface";
+import { Wallet } from "./wallet.model";
 import AppError from "../../errorHelpers/AppError";
 import httpStatus from "http-status-codes";
+import { TransactionService } from "../transaction/transaction.service";
+import { findUserAndWallet } from "../../utils/findUserAndWallet";
+import { getAdminWallet } from "../../utils/getAdminWallet";
+import { incrementWalletBalance } from "../../utils/incrementWalletBalance";
+import { Role } from "../user/user.interface";
+import { QueryBuilder } from "../../utils/QueryBuilder";
 
-import { Wallet } from "./wallet.model";
-import { WalletStatus } from "../../types";
-import { User } from "../user/user.model";
-import { Transaction } from "../transaction/transaction.model";
-import {
-  TransactionStatus,
-  TransactionType,
-} from "../transaction/transaction.constant";
+const createWallet = async (
+  userId: Types.ObjectId,
+  session?: ClientSession
+) => {
+  const walletPayload: IWallet = {
+    userId,
+    balance: 0,
+    currency: "BDT",
+    status: WalletStatus.active,
+  };
 
-const checkWalletValid = async (userId: string) => {
-  const wallet = await Wallet.findOne({ user: userId });
-
-  if (!wallet) {
-    throw new AppError(httpStatus.NOT_FOUND, "Wallet not found");
-  }
-
-  if (wallet.status === WalletStatus.BLOCKED) {
-    throw new AppError(httpStatus.FORBIDDEN, "Your wallet is blocked");
-  }
-
-  return wallet;
+  const wallet = await Wallet.create([walletPayload], { session });
+  return wallet[0];
 };
 
-const getWalletByUserId = async (userId: string) => {
-  return checkWalletValid(userId);
-};
-
-const topUp = async (userId: string, amount: number) => {
-  if (amount <= 0) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Amount must be greater than 0");
-  }
-
-  const session = await mongoose.startSession();
+const addMoney = async (userId: string, amount: number) => {
+  const session = await Wallet.startSession();
   session.startTransaction();
 
   try {
-    const wallet = await checkWalletValid(userId);
+    const { user, wallet } = await findUserAndWallet(userId, session);
 
-    wallet.balance += amount;
-    await wallet.save({ session });
-
-    const trx = await Transaction.create(
-      [
-        {
-          type: TransactionType.ADD,
-          sender: null,
-          receiver: userId,
-          amount,
-          fee: 0,
-          commission: 0,
-          status: TransactionStatus.SUCCESS,
-          notes: "Top-up",
-        },
-      ],
-      { session }
-    );
-
-    if (!trx || trx.length === 0) {
+    if (user.isApproved === false) {
       throw new AppError(
-        httpStatus.INTERNAL_SERVER_ERROR,
-        "Transaction failed"
+        httpStatus.FORBIDDEN,
+        "You are not permitted to add money. Please wait for approval."
       );
     }
 
-    await session.commitTransaction();
-    session.endSession();
-
-    return wallet;
-  } catch (err) {
-    await session.abortTransaction();
-    session.endSession();
-    throw err;
-  }
-};
-
-const withdraw = async (userId: string, amount: number) => {
-  if (amount <= 0) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Amount must be greater than 0");
-  }
-
-  const session = await mongoose.startSession();
-  session.startTransaction();
-
-  try {
-    const wallet = await checkWalletValid(userId);
-
-    if (wallet.balance < amount) {
-      throw new AppError(httpStatus.BAD_REQUEST, "Insufficient balance");
+    if (wallet.status === WalletStatus.blocked) {
+      throw new AppError(httpStatus.FORBIDDEN, "Wallet is Blocked");
     }
 
-    wallet.balance -= amount;
-    await wallet.save({ session });
-
-    const trx = await Transaction.create(
-      [
-        {
-          type: TransactionType.WITHDRAW,
-          sender: userId,
-          receiver: userId,
-          amount,
-          fee: 0,
-          commission: 0,
-          status: TransactionStatus.SUCCESS,
-          notes: "Withdraw",
-        },
-      ],
-      { session }
+    const updateWallet = await incrementWalletBalance(
+      wallet._id,
+      amount,
+      session
     );
 
-    if (!trx || trx.length === 0) {
+    if (!updateWallet) {
       throw new AppError(
-        httpStatus.INTERNAL_SERVER_ERROR,
-        "Transaction failed"
+        httpStatus.BAD_REQUEST,
+        "Money was not added to wallet!"
       );
     }
 
+    const transaction = await TransactionService.addMoney(
+      updateWallet,
+      amount,
+      session
+    );
+
     await session.commitTransaction();
     session.endSession();
-
-    return wallet;
-  } catch (err) {
+    return transaction;
+  } catch (error) {
     await session.abortTransaction();
     session.endSession();
-    throw err;
+    throw error;
   }
 };
 
 const sendMoney = async (
-  senderId: string,
-  receiverPhone: string,
+  userId: string,
+  sendWalletId: string,
   amount: number
 ) => {
-  if (amount <= 0) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Amount must be greater than 0");
-  }
-
-  const session = await mongoose.startSession();
+  const session = await Wallet.startSession();
   session.startTransaction();
-
   try {
-    const senderWallet = await checkWalletValid(senderId);
+    const { user, wallet } = await findUserAndWallet(userId, session);
 
-    if (senderWallet.balance < amount) {
-      throw new AppError(httpStatus.BAD_REQUEST, "Insufficient balance");
+    if (wallet.status === WalletStatus.blocked) {
+      throw new AppError(httpStatus.FORBIDDEN, "Your wallet is Blocked");
     }
 
-    const receiverUser = await User.findOne({ phone: receiverPhone });
-    if (!receiverUser) {
-      throw new AppError(httpStatus.NOT_FOUND, "Receiver not found");
+    const sendToWallet = await Wallet.findById(sendWalletId).session(session);
+
+    if (!sendToWallet)
+      throw new AppError(httpStatus.NOT_FOUND, "Wallet not found");
+
+    if (sendToWallet.status === WalletStatus.blocked) {
+      throw new AppError(httpStatus.FORBIDDEN, "Send Wallet is Blocked");
     }
 
-    const receiverWallet = await checkWalletValid(receiverUser._id.toString());
-
-    senderWallet.balance -= amount;
-    receiverWallet.balance += amount;
-
-    await Promise.all([
-      senderWallet.save({ session }),
-      receiverWallet.save({ session }),
-    ]);
-
-    const trx = await Transaction.create(
-      [
-        {
-          type: TransactionType.SEND,
-          sender: senderId,
-          receiver: receiverUser._id,
-          amount,
-          fee: 0,
-          commission: 0,
-          status: TransactionStatus.SUCCESS,
-          notes: "Send money",
-        },
-      ],
-      { session }
+    const { user: sendUser } = await findUserAndWallet(
+      sendToWallet.userId,
+      session
     );
-
-    if (!trx || trx.length === 0) {
+    if (user.role !== Role.user && sendUser.role !== Role.user) {
       throw new AppError(
-        httpStatus.INTERNAL_SERVER_ERROR,
-        "Transaction failed"
+        httpStatus.NOT_FOUND,
+        "Invalid wallet to send!, Both of them must be user"
       );
     }
 
+    if (wallet._id === sendToWallet.id)
+      throw new AppError(httpStatus.NOT_FOUND, "Invalid wallet id to send!");
+
+    if (wallet.balance < amount)
+      throw new AppError(
+        httpStatus.NOT_FOUND,
+        "wallet has insufficient balance"
+      );
+
+    const [updatedSendFromWallet, updatedSendToWallet] = await Promise.all([
+      incrementWalletBalance(wallet._id, -amount, session),
+      incrementWalletBalance(sendToWallet._id, amount, session),
+    ]);
+
+    const transaction = await TransactionService.cashIn(
+      updatedSendFromWallet as IWallet,
+      updatedSendToWallet as IWallet,
+      amount,
+      session
+    );
+
     await session.commitTransaction();
     session.endSession();
-
-    return {
-      senderBalance: senderWallet.balance,
-      receiverBalance: receiverWallet.balance,
-    };
-  } catch (err) {
+    return transaction;
+  } catch (error) {
     await session.abortTransaction();
     session.endSession();
-    throw err;
+    throw error;
   }
 };
 
-const getAllWallets = async () => {
-  return Wallet.find({});
+const cashIn = async (
+  agentId: string,
+  walletId: string,
+  amount: number
+) => {
+  const session = await Wallet.startSession();
+  session.startTransaction();
+  try {
+    const { user: agent, wallet: agentWallet } = await findUserAndWallet(
+      agentId,
+      session
+    );
+
+    if (agentWallet.status === WalletStatus.blocked) {
+      throw new AppError(httpStatus.FORBIDDEN, "Agent wallet is Blocked");
+    }
+
+    if (agent.isApproved === false) {
+      throw new AppError(httpStatus.FORBIDDEN, "Agent not approved");
+    }
+
+    const userWallet = await Wallet.findById(walletId).session(session);
+    if (!userWallet)
+      throw new AppError(httpStatus.NOT_FOUND, "User wallet not found");
+
+    if (userWallet.status === WalletStatus.blocked) {
+      throw new AppError(httpStatus.FORBIDDEN, "User wallet is Blocked");
+    }
+
+    if (agentWallet.balance < amount)
+      throw new AppError(
+        httpStatus.NOT_FOUND,
+        "Agent wallet has insufficient balance"
+      );
+
+    const [updatedAgentWallet, updatedUserWallet] = await Promise.all([
+      incrementWalletBalance(agentWallet._id, -amount, session),
+      incrementWalletBalance(userWallet._id, amount, session),
+    ]);
+
+    const transaction = await TransactionService.cashIn(
+      updatedAgentWallet as IWallet,
+      updatedUserWallet as IWallet,
+      amount,
+      session
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+    return transaction;
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
 };
 
-const getWalletStatistics = async () => {
-  const totalWallets = await Wallet.countDocuments();
-  const totalBalanceAgg = await Wallet.aggregate([
-    { $group: { _id: null, totalBalance: { $sum: "$balance" } } },
-  ]);
-  const totalBalance = totalBalanceAgg[0]?.totalBalance || 0;
+const cashOut = async (
+  userId: string,
+  walletId: string,
+  amount: number
+) => {
+  const session = await Wallet.startSession();
+  session.startTransaction();
 
-  const activeWallets = await Wallet.countDocuments({
-    status: WalletStatus.ACTIVE,
-  });
-  const blockedWallets = await Wallet.countDocuments({
-    status: WalletStatus.BLOCKED,
-  });
+  try {
+    const { user, wallet: userWallet } = await findUserAndWallet(
+      userId,
+      session
+    );
+
+    if (userWallet.status === WalletStatus.blocked) {
+      throw new AppError(httpStatus.FORBIDDEN, "Your wallet is Blocked");
+    }
+
+    const agentWallet = await Wallet.findById(walletId).session(session);
+    if (!agentWallet)
+      throw new AppError(httpStatus.NOT_FOUND, "Agent wallet not found");
+
+    if (agentWallet.status === WalletStatus.blocked) {
+      throw new AppError(httpStatus.FORBIDDEN, "Agent wallet is Blocked");
+    }
+
+    const feeRate = user.feeRate as number;
+    const feeAmount = (feeRate / 1000) * amount;
+    const totalAmount = amount + feeAmount;
+
+    if (userWallet.balance < totalAmount)
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "User wallet has insufficient balance (including fee)"
+      );
+
+    const adminWallet = await getAdminWallet(session);
+
+    const [updatedUserWallet, updatedAgentWallet, updatedAdminWallet] =
+      await Promise.all([
+        incrementWalletBalance(userWallet._id, -totalAmount, session),
+        incrementWalletBalance(agentWallet._id, amount, session),
+        incrementWalletBalance(adminWallet._id, feeAmount, session),
+      ]);
+
+    const transaction = await TransactionService.cashOut(
+      updatedUserWallet as IWallet,
+      updatedAgentWallet as IWallet,
+      updatedAdminWallet as IWallet,
+      amount,
+      feeAmount,
+      session
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+    return transaction;
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
+};
+
+const getAllWallet = async (query: Record<string, string>) => {
+  const queryBuilder = new QueryBuilder(
+    Wallet.find().populate("userId", "role"),
+    query
+  );
+
+  const wallets = queryBuilder.filter().paginate();
+
+  const [data, meta] = await Promise.all([
+    wallets.build(),
+    queryBuilder.getMeta(),
+  ]);
 
   return {
-    totalWallets,
-    totalBalance,
-    activeWallets,
-    blockedWallets,
+    data,
+    meta,
   };
 };
 
-const updateWalletStatus = async (walletId: string, status: WalletStatus) => {
-  if (!Object.values(WalletStatus).includes(status)) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Invalid wallet status");
-  }
+const getSingleWallet = async (id: string) => {
+  return await Wallet.findById(id).populate("userId", "name role");
+};
 
+const block = async (walletId: string) => {
   const wallet = await Wallet.findById(walletId);
-  if (!wallet) {
-    throw new AppError(httpStatus.NOT_FOUND, "Wallet not found");
-  }
 
-  wallet.status = status;
-  await wallet.save();
+  if (!wallet) throw new AppError(httpStatus.NOT_FOUND, "Wallet not found");
+  if (wallet.status === WalletStatus.blocked)
+    throw new AppError(httpStatus.BAD_REQUEST, "Wallet already Blocked");
 
-  return wallet;
+  const updateWallet = await Wallet.findByIdAndUpdate(
+    wallet._id,
+    {
+      status: WalletStatus.blocked,
+    },
+    { new: true, runValidators: true }
+  );
+
+  return updateWallet;
+};
+
+const unblock = async (walletId: string) => {
+  const wallet = await Wallet.findById(walletId);
+
+  if (!wallet) throw new AppError(httpStatus.NOT_FOUND, "Wallet not found");
+  if (wallet.status !== WalletStatus.blocked)
+    throw new AppError(httpStatus.BAD_REQUEST, "Wallet already Unblocked");
+
+  const updateWallet = await Wallet.findByIdAndUpdate(
+    wallet._id,
+    {
+      status: WalletStatus.active,
+    },
+    { new: true, runValidators: true }
+  );
+
+  return updateWallet;
 };
 
 export const WalletService = {
-  getWalletByUserId,
-  topUp,
-  withdraw,
+  createWallet,
+  addMoney,
   sendMoney,
-  getAllWallets,
-  getWalletStatistics,
-  updateWalletStatus,
+  cashIn,
+  cashOut,
+  getAllWallet,
+  getSingleWallet,
+  block,
+  unblock,
 };

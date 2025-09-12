@@ -1,36 +1,25 @@
-import { model, Schema } from "mongoose";
-import { ITransaction } from "./transaction.interface";
-import { TransactionStatus, TransactionType } from "./transaction.constant";
+import { Schema, model } from "mongoose";
+import { ITransaction, TransactionType } from "./transaction.interface";
 
 const transactionSchema = new Schema<ITransaction>(
   {
+    fromWalletId: { type: Schema.Types.ObjectId, ref: "Wallet" },
+    toWalletId: { type: Schema.Types.ObjectId, ref: "Wallet" },
     type: {
       type: String,
       enum: Object.values(TransactionType),
       required: true,
     },
-    sender: { type: Schema.Types.ObjectId, ref: "User", default: null },
-    receiver: { type: Schema.Types.ObjectId, ref: "User", required: true },
     amount: { type: Number, required: true },
-    status: {
-      type: String,
-      enum: Object.values(TransactionStatus),
-      default: TransactionStatus.SUCCESS,
-    },
-    fee: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    commission: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    notes: { type: String },
+    fee: { type: Number },
+    commission: { type: Number },
+    currentBalance: { type: Number, required: true, min: 0 },
+    initiatedBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    purpose: { type: String },
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
 
