@@ -1,11 +1,11 @@
-# 💰 PaySphere - Digital Wallet API
+# 💰 TrustPay - Digital Wallet API
 
 A secure and role-based digital wallet system built with **Node.js**, **Express**, **Typescript**, and **MongoDB**, enabling users to manage their funds and agents to perform cash-in and cash-out operations. The system supports user authentication, wallet transactions, and transaction history tracking with proper validations and Modular MVC architecture.
 
 ## 🔗 Live Link
 
-* **Frontend**: [https://paysphere-client.vercel.app](https://paysphere-client.vercel.app) 
-* **Frontend Repository**: [https://github.com/imam0321/paysphere-client](https://github.com/imam0321/paysphere-client)
+* **Frontend**: [https://TrustPay-client.vercel.app](https://TrustPay-client.vercel.app) 
+* **Frontend Repository**: [https://github.com/imam0321/TrustPay-client](https://github.com/imam0321/TrustPay-client)
 * **Backend**: [https://pay-sphere-server.vercel.app](https://pay-sphere-server.vercel.app)
 ---
 
@@ -36,8 +36,8 @@ A secure and role-based digital wallet system built with **Node.js**, **Express*
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/paysphere-api.git
-cd paysphere-api
+git clone https://github.com/your-username/TrustPay-api.git
+cd TrustPay-api
 
 npm install
 
